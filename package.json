@@ -1,0 +1,21 @@
+{
+  "name": "interviewkit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "InterviewKit — Turn a job description into a personalized interview preparation kit",
+  "scripts": {
+    "dev": "pnpm --parallel -r run dev",
+    "build": "pnpm -r run build",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "pnpm -r run lint",
+    "test": "pnpm -r run test",
+    "evaluate": "pnpm --filter @interviewkit/api run evaluate"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}
