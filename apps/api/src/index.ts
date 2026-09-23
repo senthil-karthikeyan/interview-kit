@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import rateLimit from 'express-rate-limit';
 import { connectDB } from './db/connection.js';
 import { authRouter } from './modules/auth/auth.router.js';
 import { kitsRouter } from './modules/kits/kits.router.js';
@@ -21,6 +22,23 @@ app.use(cors({
   origin: FRONTEND_URL,
   credentials: true,
 }));
+
+// Rate limiters for security & abuse prevention
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: { message: 'Too many requests, please try again later.', code: 'RATE_LIMITED' } },
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: { message: 'Too many authentication attempts, please try again later.', code: 'AUTH_RATE_LIMITED' } },
+});
 
 // ── Request parsing ──────────────────────────────────────────────────────────
 app.use(express.json({ limit: '2mb' }));
@@ -58,7 +76,8 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'InterviewKit API' });
 });
 
-app.use('/api/auth', authRouter);
+app.use('/api', generalLimiter);
+app.use('/api/auth', authLimiter, authRouter);
 app.use('/api/kits', kitsRouter);
 
 // ── Error handling ───────────────────────────────────────────────────────────
