@@ -17,7 +17,7 @@ export const RequirementExtractionOutputSchema = z.object({
   role_title: z.string(),
   seniority: z.string(),
   company: z.string(),
-  location: z.string().optional().default(''),
+  location: z.string().default(''),
   responsibilities: z.array(z.string()),
   requirements: z.array(ExtractedRequirementSchema),
 });

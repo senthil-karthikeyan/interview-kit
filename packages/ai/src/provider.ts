@@ -18,7 +18,7 @@ export interface GenerateOptions<T> {
   /** User prompt — the actual request */
   prompt: string;
   /** Zod schema to validate and type the model's response */
-  schema: z.ZodType<T>;
+  schema: z.ZodType<T, any, any>;
   /** Optional temperature (0-1). Defaults to 0.2 for structured output */
   temperature?: number;
 }
