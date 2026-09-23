@@ -1,8 +1,9 @@
 import { Router, type IRouter } from 'express';
+import { register, login, logout, getMe } from './auth.handlers.js';
 
 export const authRouter: IRouter = Router();
 
-// Routes will be implemented in Phase 3
-authRouter.get('/me', (_req, res) => {
-  res.json({ message: 'auth module stub' });
-});
+authRouter.post('/register', register);
+authRouter.post('/login', login);
+authRouter.post('/logout', logout);
+authRouter.get('/me', getMe);
