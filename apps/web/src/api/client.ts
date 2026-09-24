@@ -65,13 +65,13 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
 export const authApi = {
   login: (data: LoginInput) =>
-    request<{ user: UserPublic }>('/auth/login', {
+    request<UserPublic>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
 
   register: (data: RegisterInput) =>
-    request<{ user: UserPublic }>('/auth/register', {
+    request<UserPublic>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(data),
     }),

@@ -40,12 +40,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (data: LoginInput) => {
     const res = await authApi.login(data);
-    setUser(res.user);
+    setUser(res);
   };
 
   const register = async (data: RegisterInput) => {
     const res = await authApi.register(data);
-    setUser(res.user);
+    setUser(res);
   };
 
   const logout = async () => {
