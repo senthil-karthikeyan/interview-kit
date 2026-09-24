@@ -6,7 +6,7 @@
 # so the backend URL is never hardcoded.
 
 [build]
-  command = "pnpm --filter @interviewkit/web run build"
+  command = "pnpm --filter @interviewkit/web... run build"
   publish = "apps/web/dist"
 
 [build.environment]
