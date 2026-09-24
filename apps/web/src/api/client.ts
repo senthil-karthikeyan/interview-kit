@@ -15,7 +15,12 @@ import type {
   Schedule,
 } from '@interviewkit/schemas';
 
-const API_BASE = '/api';
+const rawApiUrl = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
+const API_BASE = rawApiUrl
+  ? rawApiUrl.endsWith('/api')
+    ? rawApiUrl
+    : `${rawApiUrl.replace(/\/+$/, '')}/api`
+  : '/api';
 
 class ApiError extends Error {
   constructor(

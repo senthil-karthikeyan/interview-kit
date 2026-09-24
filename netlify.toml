@@ -1,0 +1,28 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# InterviewKit — Netlify Frontend Configuration
+# ══════════════════════════════════════════════════════════════════════════════
+# The backend API URL is retrieved dynamically from environment variables
+# (BACKEND_URL or VITE_API_URL) via scripts/generate-redirects.cjs at build time,
+# so the backend URL is never hardcoded.
+
+[build]
+  base = "apps/web"
+  publish = "dist"
+  command = "node scripts/generate-redirects.cjs && pnpm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+  PNPM_FLAGS = "--shamefully-hoist"
+
+# Security & Cache Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

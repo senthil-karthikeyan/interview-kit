@@ -85,7 +85,7 @@ export function HomePage() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Coverage Guarantee</h3>
             <p className="text-slate-400 text-sm leading-relaxed">
-              Our automated coverage engine verifies every must-have requirement is evaluated and generates gap-filling questions with up to 3 iterative passes.
+              Our automated coverage engine verifies every must-have requirement is addressed and generates gap-filling questions with up to 3 iterative passes.
             </p>
           </div>
 
