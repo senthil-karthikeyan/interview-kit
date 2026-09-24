@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/generate-redirects.cjs && tsc --noEmit && vite build",
+    "build": "node scripts/generate-redirects.cjs && tsc --noEmit && vite build && node scripts/sync-dist.cjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx"

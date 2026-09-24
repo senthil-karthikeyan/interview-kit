@@ -6,13 +6,12 @@
 # so the backend URL is never hardcoded.
 
 [build]
-  base = "apps/web"
-  publish = "dist"
-  command = "node scripts/generate-redirects.cjs && pnpm run build"
+  command = "pnpm --filter @interviewkit/web run build"
+  publish = "apps/web/dist"
 
 [build.environment]
   NODE_VERSION = "20"
-  PNPM_FLAGS = "--shamefully-hoist"
+
 
 # Security & Cache Headers
 [[headers]]

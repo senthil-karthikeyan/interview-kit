@@ -6,8 +6,8 @@
 # so the backend URL is never hardcoded.
 
 [build]
-  publish = "dist"
-  command = "node scripts/generate-redirects.cjs && tsc --noEmit && vite build"
+  command = "pnpm --filter @interviewkit/web run build"
+  publish = "apps/web/dist"
 
 [build.environment]
   NODE_VERSION = "20"
