@@ -65,7 +65,7 @@ ${wrapUntrustedContent('INTERVIEW_INFO', interviewContext)}
 
 CATEGORY INSTRUCTIONS: ${CATEGORY_INSTRUCTIONS[category]}
 
-Generate 4-6 questions. Start question IDs from q${startIndex}.
+Generate 3-4 questions. Start question IDs from q${startIndex}.
 Each question must reference at least one requirement ID from the list above.
 
 Return JSON:

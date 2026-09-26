@@ -81,7 +81,7 @@ export const authApi = {
       method: 'POST',
     }),
 
-  getMe: () => request<{ user: UserPublic }>('/auth/me'),
+  getMe: () => request<UserPublic>('/auth/me'),
 };
 
 // ── Kits API ──────────────────────────────────────────────────────────────────

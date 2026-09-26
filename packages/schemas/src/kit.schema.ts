@@ -33,8 +33,14 @@ export const QuestionSchema = z.object({
   requirement_ids: z.array(z.string()).min(1),
   category: QuestionCategorySchema,
   prompt: z.string().min(1),
-  answer_outline: z.string().min(1),
-  difficulty: z.number().int().min(1).max(3),
+  answer_outline: z.preprocess(
+    (val) => (Array.isArray(val) ? val.join('\n- ') : typeof val === 'string' ? val : String(val ?? '')),
+    z.string().min(1)
+  ),
+  difficulty: z.preprocess(
+    (val) => (typeof val === 'string' ? parseInt(val, 10) : val),
+    z.number().int().min(1).max(3)
+  ),
   /** Not part of wire format — used internally and for client state */
   _state: ContentStateSchema.optional().default('generated'),
 });
@@ -48,7 +54,10 @@ export type ContentState = z.infer<typeof ContentStateSchema>;
 export const FlashcardSchema = z.object({
   id: z.string().min(1),           // e.g. "f1"
   front: z.string().min(1),
-  back: z.string().min(1),
+  back: z.preprocess(
+    (val) => (Array.isArray(val) ? val.join('\n- ') : typeof val === 'string' ? val : String(val ?? '')),
+    z.string().min(1)
+  ),
   requirement_ids: z.array(z.string()).min(1),
   _state: ContentStateSchema.optional().default('generated'),
 });
@@ -97,11 +106,23 @@ export type Source = z.infer<typeof SourceSchema>;
 
 // ── Company Brief ─────────────────────────────────────────────────────────────
 
-export const CompanyBriefSchema = z.object({
-  summary: z.string(),
-  what_they_do: z.string(),
-  sources: z.array(z.string()),
-});
+export const CompanyBriefSchema = z.preprocess(
+  (val) => {
+    if (Array.isArray(val)) {
+      const first = val[0] || {};
+      const summary = val.map((v: any) => v?.summary || '').filter(Boolean).join(' ') || first.summary || '';
+      const what_they_do = val.map((v: any) => v?.what_they_do || '').filter(Boolean).join(' ') || first.what_they_do || '';
+      const sources = Array.from(new Set(val.flatMap((v: any) => (Array.isArray(v?.sources) ? v.sources : []))));
+      return { summary, what_they_do, sources };
+    }
+    return val;
+  },
+  z.object({
+    summary: z.preprocess((val) => (val == null ? '' : String(val)), z.string().default('')),
+    what_they_do: z.preprocess((val) => (val == null ? '' : String(val)), z.string().default('')),
+    sources: z.preprocess((val) => (Array.isArray(val) ? val : []), z.array(z.string())),
+  })
+);
 
 export type CompanyBrief = z.infer<typeof CompanyBriefSchema>;
 

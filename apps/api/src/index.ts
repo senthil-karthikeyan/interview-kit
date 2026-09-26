@@ -1,4 +1,10 @@
-import 'dotenv/config';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config();
 import express, { type Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -20,12 +26,29 @@ const PORT = Number(process.env.PORT ?? 3001);
 const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
 const allowedOrigins = FRONTEND_URL.split(',').map((url) => url.trim().replace(/\/+$/, ''));
 
+// Determine production mode: HTTPS cross-origin between distinct cloud domains
+const isProduction =
+  process.env.NODE_ENV === 'production' &&
+  !FRONTEND_URL.includes('localhost') &&
+  !FRONTEND_URL.includes('127.0.0.1');
+
+const cookieSecure = process.env.COOKIE_SECURE
+  ? process.env.COOKIE_SECURE === 'true'
+  : isProduction;
+
+const cookieSameSite = (process.env.COOKIE_SAMESITE as 'none' | 'lax' | 'strict') ||
+  (isProduction ? 'none' : 'lax');
+
 // ── Security middleware ──────────────────────────────────────────────────────
 app.use(helmet());
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || (process.env.NODE_ENV !== 'production' && origin.startsWith('http://localhost:'))) {
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.startsWith('http://localhost:') ||
+      origin.startsWith('http://127.0.0.1:')
+    ) {
       return callback(null, true);
     }
     return callback(null, false);
@@ -36,7 +59,8 @@ app.use(cors({
 // Rate limiters for security & abuse prevention
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 300,
+  max: isProduction ? 300 : 10000,
+  skip: () => !isProduction,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: { message: 'Too many requests, please try again later.', code: 'RATE_LIMITED' } },
@@ -44,7 +68,8 @@ const generalLimiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 30,
+  max: isProduction ? 60 : 500,
+  skip: (req) => req.method === 'GET' || req.path.endsWith('/me'),
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: { message: 'Too many authentication attempts, please try again later.', code: 'AUTH_RATE_LIMITED' } },
@@ -75,8 +100,8 @@ app.use(session({
   }),
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: cookieSecure,
+    sameSite: cookieSameSite,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   },
 }));
@@ -107,3 +132,4 @@ start().catch((err) => {
   process.exit(1);
 });
 
+// Reloaded at 22:08 with GEMINI_MODEL=gemma-4-26b-a4b-it and LLM_MAX_RETRIES=5

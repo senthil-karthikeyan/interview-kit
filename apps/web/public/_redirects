@@ -1,6 +1,9 @@
 # ══════════════════════════════════════════════════════════════════════════════
-# InterviewKit — Netlify Redirects (SPA Fallback)
+# InterviewKit — Netlify Proxy Redirects (Generated from environment variable)
 # ══════════════════════════════════════════════════════════════════════════════
+
+# Proxy all /api requests to the deployed backend
+/api/*  http://localhost:3001/api/:splat  200!
 
 # SPA client-side routing fallback
 /*      /index.html               200

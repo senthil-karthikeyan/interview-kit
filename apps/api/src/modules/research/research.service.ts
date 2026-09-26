@@ -42,7 +42,7 @@ export async function generateCompanyBrief(
 
   const pageContent = pages
     .slice(0, 5) // Limit to top 5 pages for the brief
-    .map((p) => `URL: ${p.url}\nTitle: ${p.title}\n${wrapUntrustedContent('PAGE_CONTENT', p.text)}`)
+    .map((p) => `URL: ${p.url}\nTitle: ${p.title}\n${wrapUntrustedContent('PAGE_CONTENT', p.text.slice(0, 3000))}`)
     .join('\n\n---\n\n');
 
   const usedUrls = pages.slice(0, 5).map((p) => p.url);
@@ -102,7 +102,7 @@ export async function researchInterviewProcess(
 
   const pageContent = interviewPages
     .slice(0, 3)
-    .map((p) => `URL: ${p.url}\n${wrapUntrustedContent('PAGE_CONTENT', p.text)}`)
+    .map((p) => `URL: ${p.url}\n${wrapUntrustedContent('PAGE_CONTENT', p.text.slice(0, 3000))}`)
     .join('\n\n---\n\n');
 
   const prompt = `Look for interview process information in the following company pages for a "${role}" role.

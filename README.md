@@ -54,7 +54,7 @@ InterviewKit/
 └── packages/
     ├── ai/                      # LLM provider abstraction & Gemini client
     │   └── src/
-    │       ├── gemini.provider.ts # Gemini 2.0 Flash with bounded concurrency & retries
+    │       ├── gemini.provider.ts # Gemma 4 26B (gemma-4-26b-a4b-it) provider with bounded concurrency & retries
     │       └── provider.ts      # LLMProvider interface definition
     ├── schemas/                 # Shared Zod schemas & TypeScript definitions
     │   └── src/
@@ -135,9 +135,9 @@ MONGODB_URI=mongodb://localhost:27017/interviewkit
 
 # AI Provider
 GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-2.0-flash
+GEMINI_MODEL=gemma-4-26b-a4b-it
 LLM_CONCURRENCY=2
-LLM_MAX_RETRIES=3
+LLM_MAX_RETRIES=5
 
 # Web Crawler
 CRAWL_TIMEOUT_MS=10000
